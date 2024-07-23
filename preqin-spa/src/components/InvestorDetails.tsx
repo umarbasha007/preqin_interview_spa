@@ -1,23 +1,37 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCommitment, Commitment } from "../services/api";
-import {
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  //   Typography,
-  SelectChangeEvent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
+import { SelectChangeEvent } from "@mui/material";
+import CustomSelect from "./ui-common/CustomSelect";
+import CustomTable from "./ui-common/CustomTable";
 
-const InvestorDetails: React.FC = () => {
+const assetClassDetials = [
+  {
+    label: "Private Equity",
+    value: "pe",
+  },
+  {
+    label: "Private Debt",
+    value: "pd",
+  },
+  {
+    label: "Real Estate",
+    value: "re",
+  },
+  {
+    label: "Infrastructure",
+    value: "inf",
+  },
+  {
+    label: "Natural Resources",
+    value: "nr",
+  },
+  {
+    label: "Hedge Funds",
+    value: "hf",
+  },
+];
+const InvestorDetails = () => {
   const { investorId } = useParams<{ investorId: string }>();
   const [assetClass, setAssetClass] = useState<string>("");
   const [commitment, setCommitment] = useState<Commitment[]>([]);
@@ -35,45 +49,31 @@ const InvestorDetails: React.FC = () => {
   };
 
   return (
-    <div>
-      <FormControl>
-        <InputLabel>Asset Class</InputLabel>
-        <Select value={assetClass} onChange={handleChange}>
-          <MenuItem value="pe">Private Equity</MenuItem>
-          <MenuItem value="pd">Private Debt</MenuItem>
-          <MenuItem value="re">Real Estate</MenuItem>
-          <MenuItem value="inf">Infrastructure</MenuItem>
-          <MenuItem value="nr">Natural Resources</MenuItem>
-          <MenuItem value="hf">Hedge Funds</MenuItem>
-        </Select>
-      </FormControl>
+    <>
+      <h2 style={{ margin: "10px" }}>
+        Investor Details : Commitment information for investor in an asset type
+      </h2>
+      <CustomSelect
+        value={assetClass}
+        onChange={handleChange}
+        options={assetClassDetials}
+        label="Asset Class"
+        defaultWidth="250px" // Custom width
+      />
+
       {commitment.length > 0 && (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Id</TableCell>
-                <TableCell>Asset Class</TableCell>
-                <TableCell>Firm Id</TableCell>
-                <TableCell>Currency</TableCell>
-                <TableCell>Amount</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {commitment.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.id}</TableCell>
-                  <TableCell>{item.asset_class.toUpperCase()}</TableCell>
-                  <TableCell>{item.firm_id}</TableCell>
-                  <TableCell>{item.currency}</TableCell>
-                  <TableCell>{item.amount}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <CustomTable
+          data={commitment}
+          columns={[
+            { id: "id", label: "Id" },
+            { id: "asset_class", label: "Asset Class" },
+            { id: "firm_id", label: "Firm Id" },
+            { id: "currency", label: "Currency" },
+            { id: "amount", label: "Amount" },
+          ]}
+        />
       )}
-    </div>
+    </>
   );
 };
 
