@@ -1,22 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { AppDispatch, RootState } from "../store";
 import { fetchInvestors } from "../services/api";
 import { setInvestors } from "../store/investorsSlice";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
 
-const InvestorsTable: React.FC = () => {
+import CustomTable from "./ui-common/CustomTable";
+
+const InvestorsTable = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
   const investors = useSelector((state: RootState) => state.investors.list);
 
   useEffect(() => {
@@ -26,40 +17,23 @@ const InvestorsTable: React.FC = () => {
     });
   }, [dispatch]);
 
-  const handleRowClick = (investorId: number) => {
-    navigate(`/investors/${investorId}`);
-  };
-
   return (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>FirmId</TableCell>
-            <TableCell>FirmName</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell>DateAdded</TableCell>
-            <TableCell>Address</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {investors.map((investor) => (
-            <TableRow
-              key={investor.firm_id}
-              onClick={() => handleRowClick(investor.firm_id)}
-            >
-              <TableCell>{investor.firm_id}</TableCell>
-              <TableCell>{investor.firm_name}</TableCell>
-              <TableCell>{investor.firm_type}</TableCell>
-              <TableCell>
-                {new Date(investor.date_added).toLocaleDateString()}
-              </TableCell>
-              <TableCell>{investor.address}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <h2 style={{ margin: "10px" }}>Investors</h2>
+      {investors.length > 0 && (
+        <CustomTable
+          data={investors}
+          tableType={"investors"}
+          columns={[
+            { id: "firm_id", label: "FirmId" },
+            { id: "firm_name", label: "FirmName" },
+            { id: "firm_type", label: "Type" },
+            { id: "date_added", label: "DateAdded", dateTypeBool: true },
+            { id: "address", label: "Address" },
+          ]}
+        />
+      )}
+    </>
   );
 };
 
