@@ -4,6 +4,7 @@
 npx create-react-app preqin-spa --template typescript
 '''
 
-# SPA
+# Code Structure
 
-SPA is in ReactJS in typescript template under "preqin-spa" folder.
+- SPA is in ReactJS in typescript template under "preqin-spa" folder.
+- FastAPI is under "preqin-fastapi" . folder.
