@@ -1,0 +1,9 @@
+# dependencies
+/env
+__pycache__
+
+# testing
+/coverage
+
+# production
+/build
